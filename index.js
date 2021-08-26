@@ -27,13 +27,13 @@ module.exports = function(src, options) {
           break;
         }
         if (node.source && node.source.value) {
-          dependencies.push(node.source.value);
+          dependencies.push({ value: node.source.value, specifiers: node.specifiers?.map(s => s.imported?.name) });
         }
         break;
       case 'ExportNamedDeclaration':
       case 'ExportAllDeclaration':
         if (node.source && node.source.value) {
-          dependencies.push(node.source.value);
+          dependencies.push({ value: node.source.value });
         }
         break;
       case 'CallExpression':
@@ -41,7 +41,7 @@ module.exports = function(src, options) {
           break;
         }
         if (node.callee.type === 'Import' && node.arguments.length) {
-          dependencies.push(node.arguments[0].value);
+          dependencies.push({ value: node.arguments[0].value });
         }
       default:
         return;
